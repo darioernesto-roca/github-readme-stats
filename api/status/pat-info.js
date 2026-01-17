@@ -10,6 +10,7 @@
 import { request } from "../../src/common/http.js";
 import { logger } from "../../src/common/log.js";
 import { dateDiff } from "../../src/common/ops.js";
+import { getPatKeys } from "../../src/common/pat.js";
 
 export const RATE_LIMIT_SECONDS = 60 * 5; // 1 request per 5 minutes
 
@@ -39,7 +40,7 @@ const uptimeFetcher = (variables, token) => {
 };
 
 const getAllPATs = () => {
-  return Object.keys(process.env).filter((key) => /PAT_\d*$/.exec(key));
+  return getPatKeys();
 };
 
 /**
