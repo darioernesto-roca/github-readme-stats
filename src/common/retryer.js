@@ -2,14 +2,13 @@
 
 import { CustomError } from "./error.js";
 import { logger } from "./log.js";
+import { getPatTokens } from "./pat.js";
 
 // Script variables.
 
 // Count the number of GitHub API tokens available.
-const PATs = Object.keys(process.env).filter((key) =>
-  /PAT_\d*$/.exec(key),
-).length;
-const RETRIES = process.env.NODE_ENV === "test" ? 7 : PATs;
+const PAT_TOKENS = getPatTokens();
+const RETRIES = process.env.NODE_ENV === "test" ? 7 : PAT_TOKENS.length;
 
 /**
  * @typedef {import("axios").AxiosResponse} AxiosResponse Axios response.
@@ -41,7 +40,7 @@ const retryer = async (fetcher, variables, retries = 0) => {
     let response = await fetcher(
       variables,
       // @ts-ignore
-      process.env[`PAT_${retries + 1}`],
+      PAT_TOKENS[retries],
       // used in tests for faking rate limit
       retries,
     );
